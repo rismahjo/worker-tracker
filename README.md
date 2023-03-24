@@ -15,11 +15,15 @@ An application to manage an employee database through the terminal.
 
 ## Demonstration
 
+
+https://user-images.githubusercontent.com/113956697/227413551-1bc8bcf0-d2f6-4c43-9185-c3fbd2a51869.mp4
+
+
 ## Installation
 To install this application you must install the required modules using <code> npm install </code>.
 
 ## Usage
-To use this application you must add your SQL credentials either to the connection.js file or in an .env file if you are using the dotenv module.
+To use this application you must add your SQL credentials either to the <code>connection.js</code> file or in an <code>.env</code> file if you are using the dotenv module.
 
 ## Licenses
       This project is covered under the MIT license.
@@ -30,6 +34,6 @@ Adding additional features/positions as well as roles and departments.
 ## Questions
 Have questions about this project?  
 GitHub: https://github.com/rismahjo  
-Email: hmahjoob42@gmail.com
+
 ## Credits
 rismahjo
