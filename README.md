@@ -28,8 +28,8 @@ To use this application you must add your SQL credentials either to the <code>co
 ## Licenses
       This project is covered under the MIT license.
 
-## Contributing
-Adding additional features/positions as well as roles and departments.
+## Technology Used
+This application uses <code>inquirer</code> as well as <code>mySQL</code>. 
 
 ## Questions
 Have questions about this project?  
