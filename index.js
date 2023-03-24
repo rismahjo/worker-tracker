@@ -1,26 +1,27 @@
-//Dependencies
+// Variable Definitions & Dependencies
 const inquirer = require('inquirer');
 const db = require('./db/connection');
 
-//Start server
-db.connect(error => {
+// Start server after DB connection
+db.connect(err => {
     if (err) throw err;
-    console.log('Database connected');
+    console.log('Database connected.');
     employee_tracker();
 });
 
 var employee_tracker = function () {
-    inquirer.createPromptModule([{
+    inquirer.prompt([{
+        // Begin Command Line
         type: 'list',
         name: 'prompt',
         message: 'What would you like to do?',
-        choice: ['View All Departments', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', 'Log Out']
+        choices: ['View All Department', 'View All Roles', 'View All Employees', 'Add A Department', 'Add A Role', 'Add An Employee', 'Update An Employee Role', 'Log Out']
     }]).then((answers) => {
-        //Display Department table
-        if (answers.prompt === 'View All Deparments') {
-            db.query(`SELECT * FROM deparment`, (err, result) => {
+        // Views the Department Table in the Database
+        if (answers.prompt === 'View All Department') {
+            db.query(`SELECT * FROM department`, (err, result) => {
                 if (err) throw err;
-                console.log("Viewing All Deparments: ");
+                console.log("Viewing All Departments: ");
                 console.table(result);
                 employee_tracker();
             });
@@ -38,9 +39,9 @@ var employee_tracker = function () {
                 console.table(result);
                 employee_tracker();
             });
-        } else if (answers.prompt === 'Add A Deparment') {
+        } else if (answers.prompt === 'Add A Department') {
             inquirer.prompt([{
-                //Add Department
+                // Adding a Department
                 type: 'input',
                 name: 'department',
                 message: 'What is the name of the department?',
@@ -48,24 +49,25 @@ var employee_tracker = function () {
                     if (departmentInput) {
                         return true;
                     } else {
-                        console.log('Please add a Deparment!');
+                        console.log('Please Add A Department!');
                         return false;
                     }
                 }
             }]).then((answers) => {
                 db.query(`INSERT INTO department (name) VALUES (?)`, [answers.department], (err, result) => {
                     if (err) throw err;
-                    console.log(`Added ${answers.deparment} to the database.`)
+                    console.log(`Added ${answers.department} to the database.`)
                     employee_tracker();
                 });
             })
         } else if (answers.prompt === 'Add A Role') {
+            // Beginning with the database so that we may acquire the departments for the choice
             db.query(`SELECT * FROM department`, (err, result) => {
                 if (err) throw err;
 
                 inquirer.prompt([
                     {
-                        //Add a role
+                        // Adding A Role
                         type: 'input',
                         name: 'role',
                         message: 'What is the name of the role?',
@@ -73,13 +75,13 @@ var employee_tracker = function () {
                             if (roleInput) {
                                 return true;
                             } else {
-                                console.log('Please add a role!');
+                                console.log('Please Add A Role!');
                                 return false;
                             }
                         }
                     },
                     {
-                        //Add salary
+                        // Adding the Salary
                         type: 'input',
                         name: 'salary',
                         message: 'What is the salary of the role?',
@@ -87,13 +89,13 @@ var employee_tracker = function () {
                             if (salaryInput) {
                                 return true;
                             } else {
-                                console.log('Please add a salary!');
+                                console.log('Please Add A Salary!');
                                 return false;
                             }
                         }
                     },
                     {
-                        //Add department for role
+                        // Department
                         type: 'list',
                         name: 'department',
                         message: 'Which department does the role belong to?',
@@ -106,7 +108,7 @@ var employee_tracker = function () {
                         }
                     }
                 ]).then((answers) => {
-                    //Compare result, store into variable
+                    // Comparing the result and storing it into the variable
                     for (var i = 0; i < result.length; i++) {
                         if (result[i].name === answers.department) {
                             var department = result[i];
@@ -120,14 +122,14 @@ var employee_tracker = function () {
                     });
                 })
             });
-        } else if (answers.prompt === 'Add an employee') {
-            //Call database to acquire roles and managers
+        } else if (answers.prompt === 'Add An Employee') {
+            // Calling the database to acquire the roles and managers
             db.query(`SELECT * FROM employee, role`, (err, result) => {
                 if (err) throw err;
 
                 inquirer.prompt([
                     {
-                        //Add employee first name
+                        // Adding Employee First Name
                         type: 'input',
                         name: 'firstName',
                         message: 'What is the employees first name?',
@@ -135,13 +137,13 @@ var employee_tracker = function () {
                             if (firstNameInput) {
                                 return true;
                             } else {
-                                console.log('Please add a first name!');
+                                console.log('Please Add A First Name!');
                                 return false;
                             }
                         }
                     },
                     {
-                        //Add employee last name
+                        // Adding Employee Last Name
                         type: 'input',
                         name: 'lastName',
                         message: 'What is the employees last name?',
@@ -149,13 +151,13 @@ var employee_tracker = function () {
                             if (lastNameInput) {
                                 return true;
                             } else {
-                                console.log('Please add a last name!');
+                                console.log('Please Add A Salary!');
                                 return false;
                             }
                         }
                     },
                     {
-                        //Add employee role
+                        // Adding Employee Role
                         type: 'list',
                         name: 'role',
                         message: 'What is the employees role?',
@@ -169,7 +171,7 @@ var employee_tracker = function () {
                         }
                     },
                     {
-                        //Add employee manager
+                        // Adding Employee Manager
                         type: 'input',
                         name: 'manager',
                         message: 'Who is the employees manager?',
@@ -177,13 +179,13 @@ var employee_tracker = function () {
                             if (managerInput) {
                                 return true;
                             } else {
-                                console.log('Please add a manager!');
+                                console.log('Please Add A Manager!');
                                 return false;
                             }
                         }
                     }
                 ]).then((answers) => {
-                    //Compare result, store into variable
+                    // Comparing the result and storing it into the variable
                     for (var i = 0; i < result.length; i++) {
                         if (result[i].title === answers.role) {
                             var role = result[i];
@@ -197,14 +199,14 @@ var employee_tracker = function () {
                     });
                 })
             });
-        } else if (answers.prompt === 'Update an employee role') {
-            //Call database to acquire roles and managers
+        } else if (answers.prompt === 'Update An Employee Role') {
+            // Calling the database to acquire the roles and managers
             db.query(`SELECT * FROM employee, role`, (err, result) => {
                 if (err) throw err;
 
                 inquirer.prompt([
                     {
-                        //Choose employee to update
+                        // Choose an Employee to Update
                         type: 'list',
                         name: 'employee',
                         message: 'Which employees role do you want to update?',
@@ -218,7 +220,7 @@ var employee_tracker = function () {
                         }
                     },
                     {
-                        //Update new role
+                        // Updating the New Role
                         type: 'list',
                         name: 'role',
                         message: 'What is their new role?',
@@ -232,14 +234,20 @@ var employee_tracker = function () {
                         }
                     }
                 ]).then((answers) => {
-                    //Compare result, store into variable
+                    // Comparing the result and storing it into the variable
                     for (var i = 0; i < result.length; i++) {
                         if (result[i].last_name === answers.employee) {
                             var name = result[i];
                         }
                     }
 
-                    db.query(`Update employee SET ? WHERE ?`, [{ role_id: role }, { last_name: name }], (err, result) => {
+                    for (var i = 0; i < result.length; i++) {
+                        if (result[i].title === answers.role) {
+                            var role = result[i];
+                        }
+                    }
+
+                    db.query(`UPDATE employee SET ? WHERE ?`, [{ role_id: role }, { last_name: name }], (err, result) => {
                         if (err) throw err;
                         console.log(`Updated ${answers.employee} role to the database.`)
                         employee_tracker();
